@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <termios.h>
 
 #include "./returns.h"
 
@@ -12,6 +13,9 @@
 #define Y 1
 
 int     getTermSize(int size[2]);
-void    exitCodeWithError(char *error, int errorValue);
+void    exitCodeWithError(const char *error, const int errorValue);
+void    enableRawMenuTerminal();
+void    disableRawMenuTerminal();
+int     getMenuChangeBtn(int selected_btn);
 
 #endif

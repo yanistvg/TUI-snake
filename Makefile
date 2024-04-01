@@ -5,7 +5,8 @@ CFLAGS=-Wall -Wextra -Wconversion
 
 OBJS= main.o              \
       terminal-interact.o \
-      draws.o
+      draws.o             \
+      snake.o
 
 all: ${OBJS}
 	${CC} ${CFLAGS} -o ${PROGNAME} ${OBJS}
@@ -16,6 +17,8 @@ terminal-interact.o: libs/srcs/terminal-interact.c
 	${CC} ${CFLAGS} -c libs/srcs/terminal-interact.c
 draws.o: libs/srcs/draws.c
 	${CC} ${CFLAGS} -c libs/srcs/draws.c
+snake.o: libs/srcs/snake.c
+	${CC} ${CFLAGS} -c libs/srcs/snake.c
 
 clean:
 	rm ${OBJS} ${PROGNAME}

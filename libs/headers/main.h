@@ -2,9 +2,13 @@
 #define _YG_MAIN_H_
 
 #include <stdio.h>
+#include <ctype.h>
+#include <time.h>
 
 #include "./returns.h"
 #include "./terminal-interact.h"
 #include "./draws.h"
+
+extern struct snake_t snake;
 
 #endif

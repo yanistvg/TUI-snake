@@ -7,4 +7,7 @@
 /* Definition des erreur de terminal-interact */
 #define _YG_FAIL_GET_SCREEN_SIZE_ 1
 
+/* Definition des erreur de snack */
+#define _YG_ALLOC_ERROR_ 1
+
 #endif
