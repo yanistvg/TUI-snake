@@ -48,7 +48,7 @@ void exitCodeWithError(const char *error, const int errorValue) {
 ***
 *** output: none
 */
-void enableRawMenuTerminal() {
+void enableRawMenuTerminal(void) {
 	tcgetattr(STDIN_FILENO, &default_terminal);
 	atexit(disableRawMenuTerminal);
 	struct termios raw = default_terminal;
@@ -64,7 +64,7 @@ void enableRawMenuTerminal() {
 ***
 *** output: none
 */
-void disableRawMenuTerminal() {
+void disableRawMenuTerminal(void) {
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_terminal);
 	printf("\033[0;m\e[?25h");
 }
@@ -111,3 +111,74 @@ int getMenuChangeBtn(int selected_btn) {
 
 	return selected_btn;
 }
+
+/*
+*** enableRawPlayTerminal permet d'activer le mode raw sur le terminal pour pouvoir
+*** jouer sans que les appel systeme comme read devienne bloquant, et ne pas
+*** afficher les touches entrer par l'utilisateur
+***
+*** input : none
+***
+*** output: none
+*/
+void enableRawPlayTerminal(void) {
+	struct termios raw;
+
+	strncpy((char *)&raw, (const char *)&default_terminal, (size_t)sizeof(struct termios));
+
+	raw.c_lflag &= ~(tcflag_t)(ECHO | ICANON | IEXTEN | ISIG);
+	raw.c_iflag &= ~(tcflag_t)(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
+
+	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+	atexit(disableRawMenuTerminal);
+}
+
+/*
+*** readPlayingInput permet de determiner la touche presser par un utilisateur
+*** lors d'une partie
+***
+*** input : none
+***
+*** output:
+***    _YG_NO_TOUCHE_  -> si pas de touche presse
+***    _YG_ESCAPE_KEY_ -> si touche echape
+***    NORTH           -> si touche top arrow
+***    SOUTH           -> si touche bottom arrow
+***    EAST            -> si touche left arrow
+***    OUEST           -> si touche right arrow
+*/
+int readPlayingInput() {
+	char c = 0;
+
+	/*
+	*** escape key   : 27
+	*** right  arrow : 27 91 67
+	*** left   arrow : 27 91 68
+	*** top    arrow : 27 91 65
+	*** bottom arrow : 27 91 66
+	*/
+
+	/* Si une touche est presse */
+	if (read(STDIN_FILENO, &c, 1) >= 1) {
+		if (c == 27) {
+			read(STDIN_FILENO, &c, 1);
+			if (c == 91) {
+				read(STDIN_FILENO, &c, 1);
+				if (c == 65) return NORTH;
+				if (c == 66) return SOUTH;
+				if (c == 67) return EAST;
+				if (c == 68) return OUEST;
+			}
+
+			if (c <= 0 || c == 27) return _YG_ESCAPE_KEY_;
+		}
+	}
+	return _YG_NO_TOUCHE_;
+}
+
+
+
+
+
+
+

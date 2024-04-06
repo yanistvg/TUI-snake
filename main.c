@@ -1,10 +1,11 @@
 #include "./libs/headers/main.h"
-
-int main(int argc, char **argv) {
-	int size[2] = {0, 0}; // screen size
-	int playing = 1;
-	int selected_btn = 1;
+// TODO: afficher la taille de l'ecrant en haut a droite avec sprintf pour remplacer itoa
+int main(void) {
+	int                 size[2] = {0, 0}; // screen size
+	int                 playing = 1;
+	int                 selected_btn = 1;
 	struct snake_pos_t *snake_previous_end = NULL;
+	int                 counter_snake_mouving;
 
 	if (getTermSize(size) == _YG_FAIL_GET_SCREEN_SIZE_)
 		exitCodeWithError("Fail to get screen size", _YG_FAIL_GET_SCREEN_SIZE_);
@@ -17,7 +18,6 @@ int main(int argc, char **argv) {
 		// afficher la page d'accueil
 		drawMainMenu(size[X], selected_btn);
 		selected_btn = getMenuChangeBtn(selected_btn);
-
 		if ((selected_btn & 0x04) == 0x04) playing = 0;
 	} while(playing);
 
@@ -26,32 +26,64 @@ int main(int argc, char **argv) {
 		changeScreenPos(size[X], size[Y]-1);
 		return _YG_SUCCESS_;
 	}
-	disableRawMenuTerminal();
 
 	/*
 	*** DEBUT DE LA PARTIE :
-	***  a cette etapes la selection du boutton play
+	***  a cette etapes la selection du  boutton play
 	***  a etais effectue nous pouvons donc commencer
 	***  la premiere partie
 	*/
 
+	enableRawPlayTerminal(); // change le mode raw du terminal
 	/* permet d'initialiser la structure du snack */
 	initSnake();
 	drawMainGameScreen(size); // affichage du plateau de jeu avec une animation
 	drawSnack(&snake); // afficher le snack
 
 	playing = 1;
+	counter_snake_mouving = 0;
 	while (playing < 50) {
-		usleep(60000);
-		snake_previous_end = moveSnake();
-		deleteSnakeEnd(snake_previous_end->pos_x, snake_previous_end->pos_y);
-		free(snake_previous_end);
-		drawSnack(&snake);
-		playing++;
+		/* pour controller l'horloge, le delay permet d'avoir un controlle */
+		/* sur le delay du deplacement du snake toute les 100 ms et garder */
+		/* toute les 0.5 ms recuperer les touches entrer par l'utilisateur */
+		usleep(_YG_DELAY_PLAY_);
+
+		/*
+		*** zone de deplacement du snake lors que le compter de temps
+		*** atteint les 150 ms
+		*/
+		if (counter_snake_mouving >= _YG_COUNTER_MOVE_SNAKE_) {
+			// deplacement du snake en memoire
+			snake_previous_end = moveSnake();
+
+			// changement de l'affichage du snake
+			deleteSnakeEnd(snake_previous_end->pos_x, snake_previous_end->pos_y);
+			moveSnakeHead(snake.snake_position_begin->pos_x, snake.snake_position_begin->pos_y);
+
+			free(snake_previous_end);
+			
+			playing++;
+			counter_snake_mouving = 0;
+		}
+
+		/*
+		*** interception des actions de l'utilisateur, comme les fleches
+		*** directive, echape pour stopper la partie
+		*/
+		selected_btn = readPlayingInput();
+		if (selected_btn != _YG_NO_TOUCHE_ && selected_btn != _YG_ESCAPE_KEY_) {
+			changeSnakeDirection(selected_btn);
+		}
+		if (selected_btn == _YG_ESCAPE_KEY_) playing = 56;
+
+		counter_snake_mouving++;
 	}
 
-
-	/* avant de stoper le programme, placer le curseur a la fin */
+	/*
+	*** FIN D'EXECUTION :
+	***  lors de la fin de partie, il faut supprimer la structure
+	***  du snake, desactive le mode raw du terminal
+	*/
 	disableRawMenuTerminal();
 	changeScreenPos(size[X], size[Y]-1);
 	destroySnake();

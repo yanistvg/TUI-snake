@@ -51,7 +51,8 @@ void drawMainGameScreen(const int size[2]) {
 	printf("\e[1;1H\e[2J");
 	drawSnakeTitle(size[X], size[Y]);
 	changeScreenPos(1, 1);
-	printf("%sscore : %s0%s\n", TEXT_GREEN, TEXT_CYAN, DEFAULT_COLOR);
+	printf("%sscore : %s0%s", TEXT_GREEN, TEXT_CYAN, DEFAULT_COLOR);
+	changeScreenPos(1, 2);
 	
 	/* affichage de la bordure superieur de jeu */
 	drawBordureLine(size[X]);
@@ -267,13 +268,37 @@ void drawQuitteBtn(const int size_x, const int selected) {
 	printf("%s", DEFAULT_COLOR);
 }
 
+/*
+*** deleteSnakeEnd permet de supprimer une case sur l'affichage par une
+*** position x et y, utilise pour supprimer la derniere case du snake
+***
+*** input :
+***    int -> position x de la case
+***    int -> position y de la case
+***
+*** output: none
+*/
 void deleteSnakeEnd(const int pos_x, const int pos_y) {
 	changeScreenPos(2*pos_x-1, pos_y);
 	printf("%s  ", DEFAULT_COLOR);
 	fflush(stdout);
 }
 
-
+/*
+*** deleteSnakeEnd permet d'ajouter une case sur l'affichage par une
+*** position x et y, utilise pour modifier la tete du snake
+***
+*** input :
+***    int -> position x de la case
+***    int -> position y de la case
+***
+*** output: none
+*/
+void moveSnakeHead(const int pos_x, const int pos_y) {
+	changeScreenPos(2*pos_x-1, pos_y);
+	printf("%s  %s", FONT_PURPLE, DEFAULT_COLOR);
+	fflush(stdout);
+}
 
 
 

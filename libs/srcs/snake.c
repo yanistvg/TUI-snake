@@ -56,6 +56,15 @@ int destroySnake(void) {
 	return _YG_SUCCESS_;
 }
 
+/*
+*** moveSnake permet de deplacer le snake sur la grille en fonction
+*** de son orientation
+***
+*** input : none
+***
+*** output:
+***    struct snake_pos_t * -> poiteur sur l'ancienne fin du snake
+*/
 struct snake_pos_t *moveSnake(void) {
 	struct snake_pos_t *new_head = NULL;
 	struct snake_pos_t *end_snake = snake.snake_position_begin;
@@ -83,4 +92,26 @@ struct snake_pos_t *moveSnake(void) {
 	}
 
 	return return_end;
+}
+
+/*
+*** changeSnakeDirection permet de changer la direction du snake
+*** pour la prochaine iteration de son deplacement
+***
+*** input :
+***    int -> valeur de sa nouvelle direction valeur : [1; 4]
+***
+*** output: none
+*/
+void changeSnakeDirection(int newDirection) {
+	if (newDirection < 1 || newDirection > 4) return;
+
+	/* verification des changement non faisable */
+	if (newDirection == NORTH && snake.direction == SOUTH) return;
+	if (newDirection == SOUTH && snake.direction == NORTH) return;
+	if (newDirection == EAST  && snake.direction == OUEST) return;
+	if (newDirection == OUEST && snake.direction == EAST ) return;
+
+	/* changement de direction du snake */
+	snake.direction = newDirection;
 }

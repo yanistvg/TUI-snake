@@ -25,5 +25,6 @@ struct snake_t {
 int                 initSnake(void);
 int                 destroySnake(void);
 struct snake_pos_t *moveSnake(void);
+void                changeSnakeDirection(int newDirection);
 
 #endif
