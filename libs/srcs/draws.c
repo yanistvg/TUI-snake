@@ -36,6 +36,28 @@ char bouton_quit[8][200] = {
 	"└———————————————————————————————————————————————————————┘\0"
 };
 
+char game_over[19][90] = {
+	"  /$$$$$$   /$$$$$$  /$$      /$$ /$$$$$$$$\0",
+	" /$$__  $$ /$$__  $$| $$$    /$$$| $$_____/\0",
+	"| $$  \\__/| $$  \\ $$| $$$$  /$$$$| $$      \0",
+	"| $$ /$$$$| $$$$$$$$| $$ $$/$$ $$| $$$$$   \0",
+	"| $$|_  $$| $$__  $$| $$  $$$| $$| $$__/   \0",
+	"| $$  \\ $$| $$  | $$| $$\\  $ | $$| $$      \0",
+	"|  $$$$$$/| $$  | $$| $$ \\/  | $$| $$$$$$$$\0",
+	" \\______/ |__/  |__/|__/     |__/|________/\0",
+	"                                           \0",
+	"                                           \0",
+	"                                           \0",
+	"  /$$$$$$  /$$    /$$ /$$$$$$$$ /$$$$$$$   \0",
+	" /$$__  $$| $$   | $$| $$_____/| $$__  $$  \0",
+	"| $$  \\ $$| $$   | $$| $$      | $$  \\ $$  \0",
+	"| $$  | $$|  $$ / $$/| $$$$$   | $$$$$$$/  \0",
+	"| $$  | $$ \\  $$ $$/ | $$__/   | $$__  $$  \0",
+	"| $$  | $$  \\  $$$/  | $$      | $$  \\ $$  \0",
+	"|  $$$$$$/   \\  $/   | $$$$$$$$| $$  | $$  \0",
+	" \\______/     \\_/    |________/|__/  |__/  \0"
+};
+
 /*
 *** drawMainGameScreen permet de faire l'affichage en animation de la mise
 *** en place de la grille de jeu
@@ -300,13 +322,32 @@ void moveSnakeHead(const int pos_x, const int pos_y) {
 	fflush(stdout);
 }
 
+/*
+*** drawGameOverScree permet d'afficher le message game over
+*** lorsque la partie est fini en perdant comme un looser
+***
+*** input :
+***    int -> dimention de la fentre pour les x
+***    int -> dimention de la fentre pour les y
+***
+*** output: none
+*/
+void drawGameOverScree(const int size_x, const int size_y) {
+	int pos_y = size_y / 2 - 9;
+	int pos_x = size_x / 2 - 22;
+	register int i = 0;
 
+	changeScreenPos(pos_x, pos_y);
 
+	i = 0;
+	while (++i <= 19) {
+		printf("%s%s%s", TEXT_RED, game_over[i - 1], DEFAULT_COLOR);
+		changeScreenPos(pos_x, pos_y + i);
+	}
+	fflush(stdout);
+}
 
-
-
-
-
-
-
-
+void drawApple(const int pos_x, const int pos_y) {
+	changeScreenPos(pos_x, pos_y);
+	printf("%s %s", FONT_RED, DEFAULT_COLOR);
+}

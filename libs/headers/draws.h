@@ -44,5 +44,7 @@ void    drawPlayBtn(const int size_x, const int selected);
 void    drawQuitteBtn(const int size_x, const int selected);
 void    deleteSnakeEnd(const int pos_x, const int pos_y);
 void    moveSnakeHead(const int pos_x, const int pos_y);
+void    drawGameOverScree(const int size_x, const int size_y);
+void    drawApple(const int pos_x, const int pos_y);
 
 #endif

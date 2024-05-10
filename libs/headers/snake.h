@@ -24,7 +24,9 @@ struct snake_t {
 
 int                 initSnake(void);
 int                 destroySnake(void);
-struct snake_pos_t *moveSnake(void);
+struct snake_pos_t  *moveSnake(void);
+int                 checkLivingSnack(int screen_size[2]);
 void                changeSnakeDirection(int newDirection);
+int                 posIsInSnake(const int pos_x, const int pos_y);
 
 #endif

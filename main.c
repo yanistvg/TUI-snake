@@ -10,6 +10,8 @@ int main(void) {
 	if (getTermSize(size) == _YG_FAIL_GET_SCREEN_SIZE_)
 		exitCodeWithError("Fail to get screen size", _YG_FAIL_GET_SCREEN_SIZE_);
 
+	srand((unsigned int)time((time_t *)NULL));
+
 	printf("\e[1;1H\e[2J"); // clear la fenetre
 	printf("\e[?25l");
 	/* Interaction avec la page d'accueil */
@@ -37,12 +39,14 @@ int main(void) {
 	enableRawPlayTerminal(); // change le mode raw du terminal
 	/* permet d'initialiser la structure du snack */
 	initSnake();
+	generateApple(size[X], size[Y]);
 	drawMainGameScreen(size); // affichage du plateau de jeu avec une animation
+	drawApple(apple.pos_x, apple.pos_y);
 	drawSnack(&snake); // afficher le snack
 
 	playing = 1;
 	counter_snake_mouving = 0;
-	while (playing < 50) {
+	while (playing) {
 		/* pour controller l'horloge, le delay permet d'avoir un controlle */
 		/* sur le delay du deplacement du snake toute les 100 ms et garder */
 		/* toute les 0.5 ms recuperer les touches entrer par l'utilisateur */
@@ -53,6 +57,12 @@ int main(void) {
 		*** atteint les 150 ms
 		*/
 		if (counter_snake_mouving >= _YG_COUNTER_MOVE_SNAKE_) {
+			
+			if (checkLivingSnack(size)) {
+				playing = -1;
+				break;
+			}
+
 			// deplacement du snake en memoire
 			snake_previous_end = moveSnake();
 
@@ -62,7 +72,6 @@ int main(void) {
 
 			free(snake_previous_end);
 			
-			playing++;
 			counter_snake_mouving = 0;
 		}
 
@@ -74,9 +83,16 @@ int main(void) {
 		if (selected_btn != _YG_NO_TOUCHE_ && selected_btn != _YG_ESCAPE_KEY_) {
 			changeSnakeDirection(selected_btn);
 		}
-		if (selected_btn == _YG_ESCAPE_KEY_) playing = 56;
+		if (selected_btn == _YG_ESCAPE_KEY_) playing = 0;
 
 		counter_snake_mouving++;
+	}
+
+	/*
+	*** Afficher la page de fin de la partie
+	*/
+	if (playing == -1) {
+		drawGameOverScree(size[X], size[Y]);
 	}
 
 	/*

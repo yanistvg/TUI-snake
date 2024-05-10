@@ -10,6 +10,9 @@
 #define _YG_ESCAPE_KEY_           5
 
 /* Definition des erreur de snack */
-#define _YG_ALLOC_ERROR_ 1
+#define _YG_ALLOC_ERROR_  1
+#define _YG_SNAKE_KILLED_ 2
+#define _YG_POS_NOT_IN_   0
+#define _YG_POS_IS_IN_    1
 
 #endif
