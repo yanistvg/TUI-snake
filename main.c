@@ -1,5 +1,5 @@
 #include "./libs/headers/main.h"
-// TODO: afficher la taille de l'ecrant en haut a droite avec sprintf pour remplacer itoa
+
 int main(void) {
 	int                 size[2] = {0, 0}; // screen size
 	int                 playing = 1;
