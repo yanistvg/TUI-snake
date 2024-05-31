@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "./snake.h"
+#include "./returns.h"
 
 struct apple_t {
     int pos_x;
@@ -12,5 +13,6 @@ struct apple_t {
 };
 
 void generateApple(const int max_x, const int max_y);
+int  detecColitionApple(const int pos_x, const int pos_y);
 
 #endif

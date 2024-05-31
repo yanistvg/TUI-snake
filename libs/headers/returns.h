@@ -15,4 +15,8 @@
 #define _YG_POS_NOT_IN_   0
 #define _YG_POS_IS_IN_    1
 
+/* Definition des retours pour la pomme */
+#define _YG_NO_COLISION_ 0
+#define _YG_COLITIONED_  1
+
 #endif

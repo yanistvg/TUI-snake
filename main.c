@@ -6,9 +6,14 @@ int main(void) {
 	int                 selected_btn = 1;
 	struct snake_pos_t *snake_previous_end = NULL;
 	int                 counter_snake_mouving;
+	int                 predict_pos[2];
+	int                 score = 0;
 
 	if (getTermSize(size) == _YG_FAIL_GET_SCREEN_SIZE_)
 		exitCodeWithError("Fail to get screen size", _YG_FAIL_GET_SCREEN_SIZE_);
+
+	if (size[X] < 86 || size[Y] < 36)
+		exitCodeWithError("Screen size to small", _YG_FAIL_GET_SCREEN_SIZE_);
 
 	srand((unsigned int)time((time_t *)NULL));
 
@@ -58,19 +63,31 @@ int main(void) {
 		*/
 		if (counter_snake_mouving >= _YG_COUNTER_MOVE_SNAKE_) {
 			
-			if (checkLivingSnack(size)) {
+			if (checkLivingSnack(size, (int*) &predict_pos)) {
 				playing = -1;
 				break;
 			}
 
+			// verifier si la pomme est manger avec la prediction de la
+			// position du snake pour regenerer une nouvelle pomme et ne
+			// pas supprimer la derniere case du snake lors du deplacement
+			if ((selected_btn = detecColitionApple(predict_pos[X], predict_pos[Y])) == _YG_COLITIONED_) {
+				printf("\a");
+				generateApple(size[X], size[Y]);
+				drawApple(apple.pos_x, apple.pos_y);
+				drawScore(++score);
+			}
+
 			// deplacement du snake en memoire
-			snake_previous_end = moveSnake();
+			snake_previous_end = moveSnake(selected_btn);
 
 			// changement de l'affichage du snake
-			deleteSnakeEnd(snake_previous_end->pos_x, snake_previous_end->pos_y);
 			moveSnakeHead(snake.snake_position_begin->pos_x, snake.snake_position_begin->pos_y);
 
-			free(snake_previous_end);
+			if (snake_previous_end != NULL) {
+				deleteSnakeEnd(snake_previous_end->pos_x, snake_previous_end->pos_y);
+				free(snake_previous_end);
+			}
 			
 			counter_snake_mouving = 0;
 		}

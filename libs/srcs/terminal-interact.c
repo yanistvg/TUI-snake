@@ -2,16 +2,16 @@
 
 struct termios default_terminal;
 
-/*
-*** getTermSize permet d'obtenir la taille de l'ecrant du terminal (nombre de ligne
-*** et nombre de colonne) affecte a un tableau sous format X Y
-***
-*** input :
-***   int [2] -> tableau de deux elements pour enregistrer la taille
-***
-*** output:
-***   _YG_FAIL_GET_SCREEN_SIZE_ -> si erreur lors de la recpetion de la taille
-***   _YG_SUCESS_               -> si pas d'erreur
+/**
+ * getTermSize permet d'obtenir la taille de l'ecrant du terminal (nombre de ligne
+ * et nombre de colonne) affecte a un tableau sous format X Y
+ * 
+ * @param size tableau de deux elements pour enregistrer la taille
+ * 
+ * @returns _YG_FAIL_GET_SCREEN_SIZE_ si erreur lors de la recpetion de la taille
+ * @returns _YG_SUCESS_               si pas d'erreur
+ * 
+ * @date 2024-05-30
 */
 int getTermSize(int size[2]) {
 	struct winsize w;
@@ -22,31 +22,34 @@ int getTermSize(int size[2]) {
 	return _YG_SUCCESS_;
 }
 
-/*
-*** stopper le programme lors qu'une erreur est survenue en affichant un petit
-*** message d'erreur
-***
-*** input :
-***    - char * -> message de l'erreur
-***    - int    -> valeur de l'erreur
-***
-*** output: none
+/**
+ * stopper le programme lors qu'une erreur est survenue en affichant un petit
+ * message d'erreur
+ * 
+ * @param error message de l'erreur
+ * @param errorValue valeur de l'erreur
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void exitCodeWithError(const char *error, const int errorValue) {
 	printf("**ERROR: %s\n", error);
 	exit(errorValue);
 }
 
-/*
-*** enableRawMenuTerminal permet de rendre le terminal dans un mode
-*** pour le menu, c'est a dire que le terminal est bloquant mais
-*** n'affiche pas les touches, et prend en compte les touches controles.
-*** Une fonction de fin est aussi ajoute pour remettre le terminal comme
-*** d'origine
-***
-*** input : none
-***
-*** output: none
+/**
+ * enableRawMenuTerminal permet de rendre le terminal dans un mode
+ * pour le menu, c'est a dire que le terminal est bloquant mais
+ * n'affiche pas les touches, et prend en compte les touches controles.
+ * Une fonction de fin est aussi ajoute pour remettre le terminal comme
+ * d'origine
+ * 
+ * @param
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void enableRawMenuTerminal(void) {
 	tcgetattr(STDIN_FILENO, &default_terminal);
@@ -57,28 +60,30 @@ void enableRawMenuTerminal(void) {
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
-/*
-*** disableRawMenuTerminal permet de remettre le terminal comme d'origine
-***
-*** input : none
-***
-*** output: none
+/**
+ * disableRawMenuTerminal permet de remettre le terminal comme d'origine
+ * 
+ * @param
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void disableRawMenuTerminal(void) {
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_terminal);
 	printf("\033[0;m\e[?25h");
 }
 
-/*
-*** getMenuChangeBtn permet avec le mode raw active pour le menu de determiner
-*** la selection de touche utilisable comme la fleche du haut et du bas pour
-*** determiner la touche qui est selectionne
-***
-*** input :
-***    int -> valeur correspondant au boutton selectionne
-***
-*** output:
-***    int -> nouvelle valeur du bouton choisie avec la detection de la validation
+/**
+ * getMenuChangeBtn permet avec le mode raw active pour le menu de determiner
+ * la selection de touche utilisable comme la fleche du haut et du bas pour
+ * determiner la touche qui est selectionne
+ * 
+ * @param selected_btn valeur correspondant au boutton selectionne
+ * 
+ * @return nouvelle valeur du bouton choisie avec la detection de la validation
+ * 
+ * @date 2024-05-30
 */
 int getMenuChangeBtn(int selected_btn) {
 	char c;
@@ -112,14 +117,16 @@ int getMenuChangeBtn(int selected_btn) {
 	return selected_btn;
 }
 
-/*
-*** enableRawPlayTerminal permet d'activer le mode raw sur le terminal pour pouvoir
-*** jouer sans que les appel systeme comme read devienne bloquant, et ne pas
-*** afficher les touches entrer par l'utilisateur
-***
-*** input : none
-***
-*** output: none
+/**
+ * enableRawPlayTerminal permet d'activer le mode raw sur le terminal pour pouvoir
+ * jouer sans que les appel systeme comme read devienne bloquant, et ne pas
+ * afficher les touches entrer par l'utilisateur
+ * 
+ * @param
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void enableRawPlayTerminal(void) {
 	struct termios raw;
@@ -133,19 +140,20 @@ void enableRawPlayTerminal(void) {
 	atexit(disableRawMenuTerminal);
 }
 
-/*
-*** readPlayingInput permet de determiner la touche presser par un utilisateur
-*** lors d'une partie
-***
-*** input : none
-***
-*** output:
-***    _YG_NO_TOUCHE_  -> si pas de touche presse
-***    _YG_ESCAPE_KEY_ -> si touche echape
-***    NORTH           -> si touche top arrow
-***    SOUTH           -> si touche bottom arrow
-***    EAST            -> si touche left arrow
-***    OUEST           -> si touche right arrow
+/**
+ * readPlayingInput permet de determiner la touche presser par un utilisateur
+ * lors d'une partie
+ * 
+ * @param
+ * 
+ * @returns _YG_NO_TOUCHE_  si pas de touche presse
+ * @returns _YG_ESCAPE_KEY_ si touche echape
+ * @returns NORTH           si touche top arrow
+ * @returns SOUTH           si touche bottom arrow
+ * @returns EAST            si touche left arrow
+ * @returns OUEST           si touche right arrow
+ * 
+ * @date 2024-05-30
 */
 int readPlayingInput() {
 	char c = 0;
@@ -175,10 +183,3 @@ int readPlayingInput() {
 	}
 	return _YG_NO_TOUCHE_;
 }
-
-
-
-
-
-
-

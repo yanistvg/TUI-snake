@@ -58,22 +58,22 @@ char game_over[19][90] = {
 	" \\______/     \\_/    |________/|__/  |__/  \0"
 };
 
-/*
-*** drawMainGameScreen permet de faire l'affichage en animation de la mise
-*** en place de la grille de jeu
-***
-*** input :
-***   int [2] -> taille de la fenetre du terminal
-***
-*** output: none
+/**
+ * drawMainGameScreen permet de faire l'affichage en animation de la mise
+ * en place de la grille de jeu
+ * 
+ * @param size table de deux entier qui contient la taille du terminal
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void drawMainGameScreen(const int size[2]) {
 	register int i = 2;
 
 	printf("\e[1;1H\e[2J");
 	drawSnakeTitle(size[X], size[Y]);
-	changeScreenPos(1, 1);
-	printf("%sscore : %s0%s", TEXT_GREEN, TEXT_CYAN, DEFAULT_COLOR);
+	drawScore(0);
 	changeScreenPos(1, 2);
 	
 	/* affichage de la bordure superieur de jeu */
@@ -94,15 +94,30 @@ void drawMainGameScreen(const int size[2]) {
 	clearLogoTitle(size[X], size[Y]);
 }
 
-/*
-*** drawBordureLine permet d'afficher une ligne de bordure pour le snake. cette ligne
-*** est presente en haut et en bas de la grille. l'affichage par default se fait en
-*** gris pour la ligne
-***
-*** input :
-***    int -> taille d'une ligne pour les x
-***
-*** output: none
+/**
+ * drawScore permet d'afficher le score de la partie
+ * 
+ * @param score score a afficher
+ * 
+ * @return none
+ * 
+ * @date 2024-05-31
+*/
+void drawScore(int score) {
+	changeScreenPos(1, 1);
+	printf("%sscore : %s%d%s", TEXT_GREEN, TEXT_CYAN, score, DEFAULT_COLOR);
+}
+
+/**
+ * drawBordureLine permet d'afficher une ligne de bordure pour le snake. cette ligne
+ * est presente en haut et en bas de la grille. l'affichage par default se fait en
+ * gris pour la ligne
+ * 
+ * @param size_x taille d'une ligne pour les x
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void drawBordureLine(const int size_x) {
 	char line[size_x+1];
@@ -112,28 +127,30 @@ void drawBordureLine(const int size_x) {
 	printf("%s%s%s\n", FONT_GREY, line, DEFAULT_COLOR);
 }
 
-/*
-*** permet de changer la position x et y sur l'ecrant
-***
-*** input :
-***   int -> position x
-***   int -> position y
-***
-*** output: none
+/**
+ * permet de changer la position x et y sur l'ecrant
+ * 
+ * @param pos_x position x
+ * @param pos_y position y
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void changeScreenPos(const int pos_x, const int pos_y) {
 	printf("\e[%d;%dH", pos_y, pos_x);
 	fflush(stdout);
 }
 
-/*
-*** drawSnakeTitle permet d'afficher le logo snake au centre de la fenetre du terminal
-***
-*** input :
-***    int -> dimention de la fenetre en x
-***    int -> dimention de la fenetre en y
-***
-*** output: none
+/**
+ * drawSnakeTitle permet d'afficher le logo snake au centre de la fenetre du terminal
+ * 
+ * @param size_x dimention de la fenetre en x
+ * @param size_y dimention de la fenetre en y
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void drawSnakeTitle(const int size_x, const int size_y) {
 	int pos_x = (size_x - 53) / 2;
@@ -149,15 +166,16 @@ void drawSnakeTitle(const int size_x, const int size_y) {
 	fflush(stdout);
 }
 
-/*
-*** clearLogoTitle permet de supprimer l'affichage du logo au meme emplacement
-*** que sont ecriture
-***
-*** input :
-***    int -> dimention de la fenetre en x
-***    int -> dimention de la fenetre en y
-***
-*** output: none
+/**
+ * clearLogoTitle permet de supprimer l'affichage du logo au meme emplacement
+ * que sont ecriture
+ * 
+ * @param size_x dimention de la fenetre en x
+ * @param size_y dimention de la fenetre en y
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void clearLogoTitle(const int size_x, const int size_y) {
 	register int i = -1;
@@ -176,13 +194,14 @@ void clearLogoTitle(const int size_x, const int size_y) {
 	fflush(stdout);
 }
 
-/*
-*** drawSnack permet d'afficher le snack sur la grille de jeu
-***
-*** input :
-***    struct snake_t * -> poiteur sur la structure du snack
-***
-*** output: none
+/**
+ * drawSnack permet d'afficher le snack sur la grille de jeu
+ * 
+ * @param snake poiteur sur la structure du snack
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void drawSnack(const struct snake_t *snake) {
 	struct snake_pos_t *snake_pos = snake->snake_position_begin;
@@ -197,18 +216,16 @@ void drawSnack(const struct snake_t *snake) {
 	fflush(stdout);
 }
 
-/*
-*** drawMainMenu permet l'affichage du menu principale du jeu avec le logo et deux bouton
-*** pour pouvoir jouer
-***
-*** input :
-***    int -> dimention de la fenetre en x
-***    int -> dimention de la fenetre en y
-***    int -> boutton selectionne (0 -> play, 1 -> quitter)
-***    int -> bouton actuellement affiche (permet de determiner si c'est le premier affichage)
-***
-*** output:
-***    int -> le numero du bouton selectionne (qui a subit un changement d'affichage)
+/**
+ * drawMainMenu permet l'affichage du menu principale du jeu avec le logo et deux bouton
+ * pour pouvoir jouer
+ * 
+ * @param size_x dimention de la fenetre en x
+ * @param new_btn boutton selectionne (0 -> play, 1 -> quitter)
+ * 
+ * @return le numero du bouton selectionne (qui a subit un changement d'affichage)
+ * 
+ * @date 2024-05-30
 */
 int drawMainMenu(const int size_x, const int new_btn) {
 	/* Affichage du logo si c'est la premier fois */
@@ -223,13 +240,14 @@ int drawMainMenu(const int size_x, const int new_btn) {
 	return new_btn;
 }
 
-/*
-*** drawMainLogo permet d'afficher le logo pour pour la page d'accueil
-***
-*** input :
-***    int -> dimention de la fenetre en x
-***
-*** output: none
+/**
+ * drawMainLogo permet d'afficher le logo pour pour la page d'accueil
+ * 
+ * @param size_x dimention de la fenetre en x
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void drawMainLogo(const int size_x) {
 	register int i = -1;
@@ -244,14 +262,15 @@ void drawMainLogo(const int size_x) {
 	printf("%s", DEFAULT_COLOR);
 }
 
-/*
-*** drawPlayBtn permet d'afficher le boutton play pour la page d'accueil
-***
-*** input :
-***    int -> dimention de la fenetre en x
-***    int -> determine si le bouton est selectionne
-***
-*** output: none
+/**
+ * drawPlayBtn permet d'afficher le boutton play pour la page d'accueil
+ * 
+ * @param size_x dimention de la fenetre en x
+ * @param selected determine si le bouton est selectionne
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void drawPlayBtn(const int size_x, const int selected) {
 	register int i = -1;
@@ -267,14 +286,15 @@ void drawPlayBtn(const int size_x, const int selected) {
 	printf("%s", DEFAULT_COLOR);
 }
 
-/*
-*** drawQuitteBtn permet d'afficher le boutton quitter pour la page d'accueil
-***
-*** input :
-***    int -> dimention de la fenetre en x
-***    int -> determine si le bouton est selectionne
-***
-*** output: none
+/**
+ * drawQuitteBtn permet d'afficher le boutton quitter pour la page d'accueil
+ * 
+ * @param size_x dimention de la fenetre en x
+ * @param selected determine si le bouton est selectionne
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void drawQuitteBtn(const int size_x, const int selected) {
 	register int i = -1;
@@ -290,15 +310,16 @@ void drawQuitteBtn(const int size_x, const int selected) {
 	printf("%s", DEFAULT_COLOR);
 }
 
-/*
-*** deleteSnakeEnd permet de supprimer une case sur l'affichage par une
-*** position x et y, utilise pour supprimer la derniere case du snake
-***
-*** input :
-***    int -> position x de la case
-***    int -> position y de la case
-***
-*** output: none
+/**
+ * deleteSnakeEnd permet de supprimer une case sur l'affichage par une
+ * position x et y, utilise pour supprimer la derniere case du snake
+ * 
+ * @param pos_x position x de la case
+ * @param pos_y position y de la case
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void deleteSnakeEnd(const int pos_x, const int pos_y) {
 	changeScreenPos(2*pos_x-1, pos_y);
@@ -306,15 +327,16 @@ void deleteSnakeEnd(const int pos_x, const int pos_y) {
 	fflush(stdout);
 }
 
-/*
-*** deleteSnakeEnd permet d'ajouter une case sur l'affichage par une
-*** position x et y, utilise pour modifier la tete du snake
-***
-*** input :
-***    int -> position x de la case
-***    int -> position y de la case
-***
-*** output: none
+/**
+ * deleteSnakeEnd permet d'ajouter une case sur l'affichage par une
+ * position x et y, utilise pour modifier la tete du snake
+ * 
+ * @param pos_x position x de la case
+ * @param pos_y position y de la case
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void moveSnakeHead(const int pos_x, const int pos_y) {
 	changeScreenPos(2*pos_x-1, pos_y);
@@ -322,15 +344,16 @@ void moveSnakeHead(const int pos_x, const int pos_y) {
 	fflush(stdout);
 }
 
-/*
-*** drawGameOverScree permet d'afficher le message game over
-*** lorsque la partie est fini en perdant comme un looser
-***
-*** input :
-***    int -> dimention de la fentre pour les x
-***    int -> dimention de la fentre pour les y
-***
-*** output: none
+/**
+ * drawGameOverScree permet d'afficher le message game over
+ * lorsque la partie est fini en perdant comme un looser
+ * 
+ * @param size_x dimention de la fentre pour les x
+ * @param size_y dimention de la fentre pour les y
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
 */
 void drawGameOverScree(const int size_x, const int size_y) {
 	int pos_y = size_y / 2 - 9;
@@ -347,7 +370,17 @@ void drawGameOverScree(const int size_x, const int size_y) {
 	fflush(stdout);
 }
 
+/**
+ * drawApple permet d'afficher la pomme dans la grille de jeu
+ * 
+ * @param pos_x position en x de la pomme
+ * @param pos_y position en y de la pomme
+ * 
+ * @return none
+ * 
+ * @date 2024-05-30
+*/
 void drawApple(const int pos_x, const int pos_y) {
-	changeScreenPos(pos_x, pos_y);
+	changeScreenPos(2*pos_x-1, pos_y);
 	printf("%s %s", FONT_RED, DEFAULT_COLOR);
 }
